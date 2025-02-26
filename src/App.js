@@ -4,6 +4,7 @@ import "./App.css";
 import swal from "sweetalert";
 import { TfiImport } from "react-icons/tfi";
 import { FaTrash } from "react-icons/fa";
+import { AiOutlineClear } from "react-icons/ai";
 
 const STORAGE_BASE_KEY = "EXPENSE_TRACKER";
 
@@ -96,6 +97,11 @@ function App() {
     });
   }, [saveExpenses]);
 
+  const clearExpenses = useCallback(() => {
+    saveExpenses([]);
+    successAlert("Sucesso!", "Todos os gastos foram apagados!");
+  }, [saveExpenses]);
+
   return (
     <main>
       <div className="container">
@@ -133,6 +139,15 @@ function App() {
               >
                 <TfiImport size={20} />
               </button>
+              <button
+                onClick={() => {
+                  withConfirmation(clearExpenses);
+                }}
+                className="header-button"
+                title="Limpar todos gastos"
+              >
+                <AiOutlineClear size={20} />
+              </button>
             </div>
             <h2>Gastos</h2>
             <ul>
@@ -166,6 +181,20 @@ function App() {
       </div>
     </main>
   );
+}
+
+function withConfirmation(callback) {
+  swal({
+    title: "Tem certeza?",
+    text: "Você realmente quer deletar todos os seus gastos registrados?",
+    icon: "warning",
+    buttons: ["Cancelar", "Deletar"],
+    dangerMode: true,
+  }).then((willDelete) => {
+    if (willDelete) {
+      callback();
+    }
+  });
 }
 
 function validateExpense(expense) {
