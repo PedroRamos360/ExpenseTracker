@@ -58,11 +58,11 @@ function App() {
 
   const exportToClipboard = useCallback(() => {
     const formattedExpenses = expenses.map((expense) => {
-      return `${expense.label}: ${expense.value}`;
+      return `${expense.label}: ${formatCurrency(expense.value)}`;
     });
     const formattedExpensesString = `${formattedExpenses.join(
       "\n"
-    )}\nTotal: ${formatCurrency(total)}`;
+    )}\n\nTotal: ${formatCurrency(total)}`;
     navigator.clipboard.writeText(formattedExpensesString);
     successAlert(
       "Sucesso!",
