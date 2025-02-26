@@ -4,4 +4,5 @@ A simple web application to keep track of your expenses, it is developed with re
 
 You can check it out at https://pedro-gastos.vercel.app
 
-![image](https://github.com/user-attachments/assets/1dd67569-2635-4d2e-933c-c89ed8a8405b)
+![image](https://github.com/user-attachments/assets/2f5d8b53-2fd1-4154-ad10-fdb4dbe00503)
+
