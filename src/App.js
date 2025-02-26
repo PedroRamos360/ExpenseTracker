@@ -157,10 +157,10 @@ function App() {
                 </li>
               ))}
             </ul>
-            <div className="footer">
+            <footer>
               <hr />
               <h3>Total: {formatCurrency(total)}</h3>
-            </div>
+            </footer>
           </div>
         </div>
       </div>
