@@ -1,0 +1,133 @@
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.container {
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 1.25rem;
+  max-width: 25rem;
+  height: 80vh;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.add-expense-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.add-button {
+  padding: 0.625rem;
+  border-radius: 5px;
+  border: 1px solid rgb(46, 129, 237);
+  background-color: rgb(46, 129, 237);
+  cursor: pointer;
+  color: white;
+}
+
+.header-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: rgb(46, 129, 237);
+  padding: 0.625rem;
+}
+
+input {
+  padding: 0.625rem;
+  margin: 0.625rem;
+  border-radius: 5px;
+  border: 1px solid rgb(46, 129, 237);
+}
+
+input:focus,
+button:focus {
+  outline: none;
+  border: 2px solid rgb(0, 110, 255);
+}
+
+.expense-li {
+  display: flex;
+  height: 2.1875rem;
+  list-style-type: disc;
+}
+
+li {
+  list-style-type: decimal;
+}
+
+.delete-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  align-self: center;
+  margin-right: 0.625rem;
+  color: red;
+  height: 1.5625rem;
+  padding: 0;
+  width: 1.5625rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+p {
+  margin: 0;
+  align-self: center;
+}
+
+button:focus {
+  outline: none;
+  border: none;
+}
+
+.footer {
+  width: 100%;
+  margin-top: auto;
+}
+
+ul {
+  height: 40vh;
+  overflow-y: scroll;
+}
+
+@media (max-width: 37.5rem) {
+  .container {
+    height: auto;
+    padding: 0.625rem;
+  }
+
+  .add-expense-container {
+    flex-direction: column;
+  }
+
+  .add-button {
+    width: 100%;
+    margin-top: 0.625rem;
+  }
+
+  input {
+    width: 100%;
+    margin: 0.3125rem 0;
+  }
+
+  .header-button {
+    padding: 0.3125rem;
+  }
+
+  ul {
+    height: auto;
+    max-height: 40vh;
+  }
+}
