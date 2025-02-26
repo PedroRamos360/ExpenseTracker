@@ -60,23 +60,20 @@ function App() {
     const formattedExpenses = expenses.map((expense) => {
       return `${expense.label}: ${expense.value}`;
     });
-    const formattedExpensesString = formattedExpenses.join("\n");
+    const formattedExpensesString = `${formattedExpenses.join(
+      "\n"
+    )}\nTotal: ${formatCurrency(total)}`;
     navigator.clipboard.writeText(formattedExpensesString);
     successAlert(
       "Sucesso!",
       "Gastos copiados para a área de transferência com sucesso!"
     );
-  }, [expenses]);
+  }, [expenses, total]);
 
   const importFromClipboard = useCallback(() => {
     navigator.clipboard.readText().then((text) => {
-      console.log(text);
       const newExpenses = text.split(/[\r\n]+/).map((expense) => {
         let [label, value] = expense.split(":").map((item) => item.trim());
-        console.log({
-          expense,
-          result: validateExpense(expense),
-        });
         if (!validateExpense(expense)) {
           return "error";
         }
