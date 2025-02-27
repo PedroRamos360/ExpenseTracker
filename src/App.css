@@ -124,6 +124,13 @@ h3 {
   height: 60vh;
 }
 
+.header-button-container {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 @media (max-width: 600px) {
   .container {
     height: auto;

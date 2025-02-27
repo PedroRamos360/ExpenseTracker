@@ -1,29 +1,42 @@
 import React, { useCallback, useMemo } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import "./App.css";
-import swal from "sweetalert";
 import { TfiImport } from "react-icons/tfi";
 import { FaTrash } from "react-icons/fa";
 import { AiOutlineClear } from "react-icons/ai";
-
-const STORAGE_BASE_KEY = "EXPENSE_TRACKER";
-
-const StorageKeys = {
-  expenses: `${STORAGE_BASE_KEY}-expenses`,
-};
+import { BsCopy } from "react-icons/bs";
+import { errorAlert, withConfirmation } from "./utils/alerts";
+import { validateExpense } from "./utils/validateExpense";
+import { Storage } from "./storage/Storage";
+import { useButtons } from "./hooks/useButtons";
+import { Currency } from "./utils/Currency";
 
 function App() {
-  const [expenses, setExpenses] = React.useState(getSavedExpenses());
+  const [expenses, setExpenses] = React.useState(Storage.getStoredExpenses());
   const [newExpense, setNewExpense] = React.useState("");
+  const saveExpenses = useCallback((expensesToSave) => {
+    setExpenses(expensesToSave);
+    Storage.storeExpenses(expensesToSave);
+  }, []);
+  const total = useMemo(() => {
+    return expenses.reduce((acc, curr) => {
+      return acc + parseFloat(curr.value);
+    }, 0);
+  }, [expenses]);
+  const {
+    clearExpenses,
+    importFromClipboard,
+    exportToClipboard,
+    exportToClipboardValueFirst,
+  } = useButtons({
+    saveExpenses,
+    expenses,
+    total,
+  });
 
   const handleNewExpense = (event) => {
     setNewExpense(event.target.value);
   };
-
-  const saveExpenses = useCallback((expensesToSave) => {
-    setExpenses(expensesToSave);
-    localStorage.setItem(StorageKeys.expenses, JSON.stringify(expensesToSave));
-  }, []);
 
   const addExpense = useCallback(() => {
     if (!validateExpense(newExpense)) {
@@ -42,62 +55,6 @@ function App() {
     saveExpenses([...expenses, expense]);
     setNewExpense("");
   }, [newExpense, expenses, saveExpenses]);
-
-  const total = useMemo(() => {
-    return expenses.reduce((acc, curr) => {
-      return acc + parseFloat(curr.value);
-    }, 0);
-  }, [expenses]);
-
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    }).format(value);
-  };
-
-  const exportToClipboard = useCallback(() => {
-    const formattedExpenses = expenses.map((expense) => {
-      return `${expense.label}: ${formatCurrency(expense.value)}`;
-    });
-    const formattedExpensesString = `${formattedExpenses.join(
-      "\n"
-    )}\n\nTotal: ${formatCurrency(total)}`;
-    navigator.clipboard.writeText(formattedExpensesString);
-    successAlert(
-      "Sucesso!",
-      "Gastos copiados para a área de transferência com sucesso!"
-    );
-  }, [expenses, total]);
-
-  const importFromClipboard = useCallback(() => {
-    navigator.clipboard.readText().then((text) => {
-      const newExpenses = text.split(/[\r\n]+/).map((expense) => {
-        let [label, value] = expense.split(":").map((item) => item.trim());
-        if (!validateExpense(expense)) {
-          return "error";
-        }
-        if (value.includes(",")) {
-          value = value.replace(",", ".");
-        }
-        return { label, value };
-      });
-      if (newExpenses.includes("error")) {
-        errorAlert(
-          "Erro!",
-          "Um ou mais gastos estão em um formato inválido (use o formato: Mercado: 25.00)"
-        );
-        return;
-      }
-      saveExpenses(newExpenses);
-      successAlert("Sucesso!", "Gastos importados com sucesso!");
-    });
-  }, [saveExpenses]);
-
-  const clearExpenses = useCallback(() => {
-    saveExpenses([]);
-    successAlert("Sucesso!", "Todos os gastos foram apagados!");
-  }, [saveExpenses]);
 
   return (
     <main>
@@ -121,11 +78,11 @@ function App() {
             </button>
           </div>
           <div className="expenses-container">
-            <div>
+            <div className="header-button-container">
               <button
                 onClick={exportToClipboard}
                 className="header-button"
-                title="Copiar gastos para a área de transferência"
+                title="Copiar gastos para a área de transferência (descrição primeiro)"
               >
                 <IoCopyOutline size={20} />
               </button>
@@ -145,6 +102,13 @@ function App() {
               >
                 <AiOutlineClear size={20} />
               </button>
+              <button
+                onClick={exportToClipboardValueFirst}
+                className="header-button"
+                title="Copiar gastos para a área de transferência (valores primeiro)"
+              >
+                <BsCopy size={20} />
+              </button>
             </div>
             <h2>Gastos</h2>
             <ul>
@@ -163,7 +127,7 @@ function App() {
                       />
                     </button>
                     <p>
-                      {expense.label}: {formatCurrency(expense.value)}
+                      {expense.label}: {Currency.format(expense.value)}
                     </p>
                   </div>
                 </li>
@@ -171,73 +135,13 @@ function App() {
             </ul>
             <footer>
               <hr />
-              <h3>Total: {formatCurrency(total)}</h3>
+              <h3>Total: {Currency.format(total)}</h3>
             </footer>
           </div>
         </div>
       </div>
     </main>
   );
-}
-
-function withConfirmation(callback) {
-  swal({
-    title: "Tem certeza?",
-    text: "Você realmente quer deletar todos os seus gastos registrados?",
-    icon: "warning",
-    buttons: ["Cancelar", "Deletar"],
-    dangerMode: true,
-  }).then((willDelete) => {
-    if (willDelete) {
-      callback();
-    }
-  });
-}
-
-function validateExpense(expense) {
-  const regexToMatch = /^[a-zA-Z0-9ç ]+:\s*[0-9]+([.,]\d{1,2})?$/g;
-  if (!regexToMatch.test(expense)) {
-    return false;
-  }
-  return true;
-}
-
-function successAlert(title, text) {
-  swal({
-    title: title,
-    text: text,
-    icon: "success",
-    buttons: {
-      confirm: {
-        text: "Ok",
-        value: true,
-        visible: true,
-        className: "",
-        closeModal: true,
-      },
-    },
-  });
-}
-
-function errorAlert(title, text) {
-  swal({
-    title: title,
-    text: text,
-    icon: "error",
-    buttons: {
-      confirm: {
-        text: "Ok",
-        value: true,
-        visible: true,
-        className: "",
-        closeModal: true,
-      },
-    },
-  });
-}
-
-function getSavedExpenses() {
-  return JSON.parse(localStorage.getItem(StorageKeys.expenses)) || [];
 }
 
 export default App;
