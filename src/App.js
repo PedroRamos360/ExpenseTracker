@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from "react";
 import { IoCopyOutline } from "react-icons/io5";
 import "./App.css";
 import { TfiImport } from "react-icons/tfi";
-import { FaTrash } from "react-icons/fa";
+import { FaTrash, FaHistory } from "react-icons/fa";
 import { AiOutlineClear } from "react-icons/ai";
 import { BsCopy } from "react-icons/bs";
 import { errorAlert, withConfirmation } from "./utils/alerts";
@@ -22,6 +22,8 @@ function App() {
     switchTab,
     updateTabExpenses,
     renameTab,
+    importOldExpenses,
+    hasOldExpenses,
   } = useTabs();
 
   const [newExpense, setNewExpense] = React.useState("");
@@ -136,6 +138,15 @@ function App() {
               >
                 <TfiImport size={20} />
               </button>
+              {hasOldExpenses && (
+                <button
+                  onClick={importOldExpenses}
+                  className="header-button"
+                  title="Importar gastos da versão anterior"
+                >
+                  <FaHistory size={20} />
+                </button>
+              )}
               <button
                 onClick={() => {
                   withConfirmation(clearExpenses);

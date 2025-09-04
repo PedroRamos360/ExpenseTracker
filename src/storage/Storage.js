@@ -87,4 +87,52 @@ export class Storage {
     this.storeTabs(updatedTabs);
     return updatedTabs;
   }
+
+  static importOldExpenses(activeTabId) {
+    const oldExpenses =
+      JSON.parse(localStorage.getItem(StorageKeys.expenses)) || [];
+    if (oldExpenses.length === 0) {
+      return { success: false, message: "Nenhum gasto antigo encontrado." };
+    }
+
+    const tabs = this.getTabs();
+    const activeTab = tabs.find((tab) => tab.id === activeTabId);
+
+    if (!activeTab) {
+      return { success: false, message: "Aba ativa não encontrada." };
+    }
+
+    const existingExpenses = activeTab.expenses || [];
+    const newExpenses = [...existingExpenses];
+
+    oldExpenses.forEach((oldExpense) => {
+      const isDuplicate = existingExpenses.some(
+        (existing) =>
+          existing.label === oldExpense.label &&
+          existing.value === oldExpense.value
+      );
+      if (!isDuplicate) {
+        newExpenses.push(oldExpense);
+      }
+    });
+
+    const updatedTabs = tabs.map((tab) =>
+      tab.id === activeTabId ? { ...tab, expenses: newExpenses } : tab
+    );
+
+    this.storeTabs(updatedTabs);
+
+    const importedCount = newExpenses.length - existingExpenses.length;
+    return {
+      success: true,
+      message: `${importedCount} gastos importados com sucesso!`,
+      importedCount,
+    };
+  }
+
+  static hasOldExpenses() {
+    const oldExpenses =
+      JSON.parse(localStorage.getItem(StorageKeys.expenses)) || [];
+    return oldExpenses.length > 0;
+  }
 }

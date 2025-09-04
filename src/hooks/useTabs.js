@@ -103,6 +103,25 @@ export function useTabs() {
     [tabs]
   );
 
+  const importOldExpenses = useCallback(() => {
+    if (!activeTabId) {
+      errorAlert("Erro!", "Nenhuma aba ativa encontrada.");
+      return;
+    }
+
+    const result = Storage.importOldExpenses(activeTabId);
+
+    if (result.success) {
+      const updatedTabs = Storage.getTabs();
+      setTabs(updatedTabs);
+      successAlert("Sucesso!", result.message);
+    } else {
+      errorAlert("Erro!", result.message);
+    }
+  }, [activeTabId]);
+
+  const hasOldExpenses = Storage.hasOldExpenses();
+
   return {
     tabs,
     activeTab,
@@ -112,6 +131,8 @@ export function useTabs() {
     switchTab,
     updateTabExpenses,
     renameTab,
+    importOldExpenses,
+    hasOldExpenses,
     isCreatingTab,
     setIsCreatingTab,
     newTabName,
