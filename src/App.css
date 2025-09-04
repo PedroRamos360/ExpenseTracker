@@ -142,4 +142,266 @@ h3 {
   .header-button {
     padding: 5px;
   }
+
+  .tab-bar {
+    margin-bottom: 15px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 0 10px;
+  }
+
+  .tabs-container {
+    gap: 6px;
+    padding-bottom: 6px;
+    padding-right: 6px;
+  }
+
+  .tab {
+    min-width: 70px;
+    max-width: 150px;
+    width: auto;
+    padding: 10px 6px;
+    height: 42px;
+  }
+
+  .tab-name {
+    font-size: 15px;
+    margin-right: 3px;
+  }
+
+  .tab-actions {
+    gap: 4px;
+    opacity: 1;
+  }
+
+  .tab-action-button {
+    min-width: 22px;
+    min-height: 22px;
+    padding: 3px;
+  }
+
+  .add-tab-button {
+    width: 42px;
+    height: 42px;
+    margin-left: 2px;
+  }
+
+  .new-tab-input {
+    width: 90px;
+    min-width: 70px;
+    max-width: 120px;
+    padding: 6px 8px;
+    font-size: 15px;
+  }
+
+  .tab-edit-input {
+    padding: 3px 5px;
+    font-size: 15px;
+  }
+
+  .tabs-container {
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+  }
+
+  .tab-action-button {
+    touch-action: manipulation;
+  }
+
+  .add-tab-button {
+    touch-action: manipulation;
+  }
+}
+
+.tab-bar {
+  margin-bottom: 20px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.tabs-container::-webkit-scrollbar {
+  height: 4px;
+}
+
+.tabs-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tabs-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 2px;
+}
+
+.tabs-container::-webkit-scrollbar-thumb:hover {
+  background-color: #999;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 12px 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  max-width: 200px;
+  width: auto;
+  flex-shrink: 0;
+  position: relative;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.tab:hover {
+  background-color: #e8f4fd;
+}
+
+.tab.active {
+  background-color: rgb(46, 129, 237);
+  color: white;
+  border-color: rgb(46, 129, 237);
+}
+
+.tab-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 16px;
+  font-weight: 500;
+  margin-right: 4px;
+  line-height: 1.2;
+  min-width: 0;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 6px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.tab:hover .tab-actions {
+  opacity: 1;
+}
+
+.tab.active .tab-actions {
+  opacity: 1;
+}
+
+.tab-action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.tab-action-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tab.active .tab-action-button {
+  color: white;
+}
+
+.tab-action-button.edit-button {
+  color: #666;
+}
+
+.tab-action-button.delete-button {
+  color: #ff4444;
+}
+
+.tab.active .tab-action-button.edit-button,
+.tab.active .tab-action-button.delete-button {
+  color: white;
+}
+
+.add-tab-button {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: rgb(46, 129, 237);
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+
+.add-tab-button:hover {
+  background-color: rgb(46, 129, 237);
+  color: white;
+  border-color: rgb(46, 129, 237);
+  transform: scale(1.05);
+}
+
+.new-tab-input {
+  border: 1px solid rgb(46, 129, 237);
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 16px;
+  width: 100px;
+  min-width: 80px;
+  max-width: 160px;
+  outline: none;
+  height: 20px;
+  box-sizing: border-box;
+}
+
+.new-tab-input:focus {
+  border: 2px solid rgb(0, 110, 255);
+}
+
+.tab-edit-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.tab-edit-input {
+  border: 1px solid white;
+  border-radius: 4px;
+  padding: 4px 6px;
+  font-size: 16px;
+  width: 100%;
+  min-width: 60px;
+  outline: none;
+  background-color: white;
+  color: #333;
+  height: 20px;
+  box-sizing: border-box;
+}
+
+.tab-edit-input:focus {
+  border: 2px solid rgb(0, 110, 255);
 }

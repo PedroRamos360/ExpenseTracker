@@ -7,22 +7,44 @@ import { AiOutlineClear } from "react-icons/ai";
 import { BsCopy } from "react-icons/bs";
 import { errorAlert, withConfirmation } from "./utils/alerts";
 import { validateExpense } from "./utils/validateExpense";
-import { Storage } from "./storage/Storage";
 import { useButtons } from "./hooks/useButtons";
+import { useTabs } from "./hooks/useTabs";
 import { Currency } from "./utils/Currency";
+import { TabBar } from "./components/TabBar";
 
 function App() {
-  const [expenses, setExpenses] = React.useState(Storage.getStoredExpenses());
+  const {
+    tabs,
+    activeTab,
+    activeTabId,
+    createTab,
+    deleteTab,
+    switchTab,
+    updateTabExpenses,
+    renameTab,
+  } = useTabs();
+
   const [newExpense, setNewExpense] = React.useState("");
-  const saveExpenses = useCallback((expensesToSave) => {
-    setExpenses(expensesToSave);
-    Storage.storeExpenses(expensesToSave);
-  }, []);
+
+  const expenses = useMemo(() => {
+    return activeTab ? activeTab.expenses : [];
+  }, [activeTab]);
+
+  const saveExpenses = useCallback(
+    (expensesToSave) => {
+      if (activeTabId) {
+        updateTabExpenses(activeTabId, expensesToSave);
+      }
+    },
+    [activeTabId, updateTabExpenses]
+  );
+
   const total = useMemo(() => {
     return expenses.reduce((acc, curr) => {
       return acc + parseFloat(curr.value);
     }, 0);
   }, [expenses]);
+
   const {
     clearExpenses,
     importFromClipboard,
@@ -56,10 +78,31 @@ function App() {
     setNewExpense("");
   }, [newExpense, expenses, saveExpenses]);
 
+  if (!activeTab) {
+    return (
+      <main>
+        <div className="container">
+          <h1>Calculadora de Gastos</h1>
+          <p>Carregando...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main>
       <div className="container">
         <h1>Calculadora de Gastos</h1>
+
+        <TabBar
+          tabs={tabs}
+          activeTabId={activeTabId}
+          onSwitchTab={switchTab}
+          onCreateTab={createTab}
+          onDeleteTab={deleteTab}
+          onRenameTab={renameTab}
+        />
+
         <div>
           <div className="add-expense-container">
             <input
@@ -110,7 +153,7 @@ function App() {
                 <BsCopy size={20} />
               </button>
             </div>
-            <h2>Gastos</h2>
+            <h2>Gastos - {activeTab.name}</h2>
             <ul>
               {expenses.map((expense, index) => (
                 <li key={index}>
