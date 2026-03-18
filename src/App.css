@@ -1,3 +1,72 @@
+/* Header styles */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.app-header h1 {
+  margin: 0;
+}
+
+.header-settings-button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: rgb(46, 129, 237);
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Totals summary styles */
+.totals-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.totals-summary h3 {
+  margin: 0;
+}
+
+.totals-metrics {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.totals-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.totals-metric strong {
+  color: rgb(46, 129, 237);
+  font-size: 1rem;
+}
+
+.totals-metric .remaining-safe {
+  color: #2e7d32;
+}
+
+.totals-metric .remaining-warn {
+  color: #f9a825;
+}
+
+.totals-metric .remaining-alert {
+  color: #ef6c00;
+}
+
+.totals-metric .remaining-critical {
+  color: #c62828;
+}
 main {
   display: flex;
   flex-direction: column;
@@ -404,4 +473,87 @@ h3 {
 
 .tab-edit-input:focus {
   border: 2px solid rgb(0, 110, 255);
+}
+
+.settings-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.settings-modal {
+  width: min(90vw, 360px);
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.settings-modal-header h2 {
+  margin: 0;
+  color: rgb(46, 129, 237);
+}
+
+.settings-modal-close {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-size: 20px;
+  line-height: 1;
+  color: #666;
+}
+
+.settings-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settings-modal-body input {
+  width: 100%;
+  margin: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.settings-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.settings-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.settings-primary,
+.settings-secondary {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.settings-primary {
+  background: rgb(46, 129, 237);
+  color: #ffffff;
+}
+
+.settings-secondary {
+  background: #e6e6e6;
+  color: #333;
 }

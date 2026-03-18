@@ -5,12 +5,17 @@ import { TfiImport } from "react-icons/tfi";
 import { FaTrash, FaHistory } from "react-icons/fa";
 import { AiOutlineClear } from "react-icons/ai";
 import { BsCopy } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
 import { errorAlert, withConfirmation } from "./utils/alerts";
 import { validateExpense } from "./utils/validateExpense";
 import { useButtons } from "./hooks/useButtons";
 import { useTabs } from "./hooks/useTabs";
+import { useSettings } from "./hooks/useSettings";
 import { Currency } from "./utils/Currency";
 import { TabBar } from "./components/TabBar";
+import { AppHeader } from "./components/AppHeader";
+import { SettingsModal } from "./components/SettingsModal";
+import { TotalsSummary } from "./components/TotalsSummary";
 
 function App() {
   const {
@@ -26,6 +31,9 @@ function App() {
     hasOldExpenses,
   } = useTabs();
 
+  const { spendingLimit, setSpendingLimit } = useSettings();
+  const [isSettingsOpen, setIsSettingsOpen] = React.useState(false);
+
   const [newExpense, setNewExpense] = React.useState("");
 
   const expenses = useMemo(() => {
@@ -38,7 +46,7 @@ function App() {
         updateTabExpenses(activeTabId, expensesToSave);
       }
     },
-    [activeTabId, updateTabExpenses]
+    [activeTabId, updateTabExpenses],
   );
 
   const total = useMemo(() => {
@@ -84,7 +92,7 @@ function App() {
     return (
       <main>
         <div className="container">
-          <h1>Calculadora de Gastos</h1>
+          <AppHeader />
           <p>Carregando...</p>
         </div>
       </main>
@@ -94,7 +102,7 @@ function App() {
   return (
     <main>
       <div className="container">
-        <h1>Calculadora de Gastos</h1>
+        <AppHeader />
 
         <TabBar
           tabs={tabs}
@@ -124,6 +132,13 @@ function App() {
           </div>
           <div className="expenses-container">
             <div className="header-button-container">
+              <button
+                onClick={() => setIsSettingsOpen(true)}
+                className="header-button"
+                title="Abrir configurações"
+              >
+                <FiSettings size={20} />
+              </button>
               <button
                 onClick={exportToClipboard}
                 className="header-button"
@@ -173,7 +188,7 @@ function App() {
                       <FaTrash
                         onClick={() => {
                           const newExpenses = expenses.filter(
-                            (expenseItem) => expenseItem !== expense
+                            (expenseItem) => expenseItem !== expense,
                           );
                           saveExpenses(newExpenses);
                         }}
@@ -189,11 +204,17 @@ function App() {
             </ul>
             <footer>
               <hr />
-              <h3>Total: {Currency.format(total)}</h3>
+              <TotalsSummary total={total} spendingLimit={spendingLimit} />
             </footer>
           </div>
         </div>
       </div>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+        spendingLimit={spendingLimit}
+        onSave={setSpendingLimit}
+      />
     </main>
   );
 }

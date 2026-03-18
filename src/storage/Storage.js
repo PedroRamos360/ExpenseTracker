@@ -4,6 +4,7 @@ const StorageKeys = {
   expenses: `${STORAGE_BASE_KEY}-expenses`,
   tabs: `${STORAGE_BASE_KEY}-tabs`,
   activeTab: `${STORAGE_BASE_KEY}-active-tab`,
+  spendingLimit: `${STORAGE_BASE_KEY}-spending-limit`,
 };
 
 export class Storage {
@@ -74,7 +75,7 @@ export class Storage {
   static updateTabExpenses(tabId, expenses) {
     const tabs = this.getTabs();
     const updatedTabs = tabs.map((tab) =>
-      tab.id === tabId ? { ...tab, expenses } : tab
+      tab.id === tabId ? { ...tab, expenses } : tab,
     );
     this.storeTabs(updatedTabs);
   }
@@ -82,7 +83,7 @@ export class Storage {
   static renameTab(tabId, newName) {
     const tabs = this.getTabs();
     const updatedTabs = tabs.map((tab) =>
-      tab.id === tabId ? { ...tab, name: newName } : tab
+      tab.id === tabId ? { ...tab, name: newName } : tab,
     );
     this.storeTabs(updatedTabs);
     return updatedTabs;
@@ -109,7 +110,7 @@ export class Storage {
       const isDuplicate = existingExpenses.some(
         (existing) =>
           existing.label === oldExpense.label &&
-          existing.value === oldExpense.value
+          existing.value === oldExpense.value,
       );
       if (!isDuplicate) {
         newExpenses.push(oldExpense);
@@ -117,7 +118,7 @@ export class Storage {
     });
 
     const updatedTabs = tabs.map((tab) =>
-      tab.id === activeTabId ? { ...tab, expenses: newExpenses } : tab
+      tab.id === activeTabId ? { ...tab, expenses: newExpenses } : tab,
     );
 
     this.storeTabs(updatedTabs);
@@ -134,5 +135,22 @@ export class Storage {
     const oldExpenses =
       JSON.parse(localStorage.getItem(StorageKeys.expenses)) || [];
     return oldExpenses.length > 0;
+  }
+
+  static getSpendingLimit() {
+    const storedLimit = localStorage.getItem(StorageKeys.spendingLimit);
+    if (!storedLimit) {
+      return null;
+    }
+    const parsed = Number.parseFloat(storedLimit);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  static setSpendingLimit(limit) {
+    if (limit === null || limit === undefined || limit === "") {
+      localStorage.removeItem(StorageKeys.spendingLimit);
+      return;
+    }
+    localStorage.setItem(StorageKeys.spendingLimit, String(limit));
   }
 }
